@@ -135,7 +135,11 @@ if (!window_vec.isEmpty())
 }
 #endif
 
-    std::cout << rel_path << std::endl;
+    if (param1 != "silent" && param2 != "silent" && gui_vec.empty())
+    {
+        std::cout << rel_path << std::endl;
+    }
+
     if (num_threads <= quantity && quantity != 1)
     {
         std::thread th([&](){
@@ -241,6 +245,18 @@ void cmd_handler(std::string param, std::string param2, std::string command, std
     {
         arg2 = "sep";
     }
+    if (param == "--silent" || param2 == "--silent")
+    {
+        if (arg1 != "")
+        {
+            arg1 = "silent";
+        }
+        else
+        {
+            arg2 = "silent";
+        }
+    }
+
     if (param.starts_with("-j") || param2.starts_with("-j"))
     {
         std::string tmp_string;
@@ -367,7 +383,10 @@ if (!window_vec.isEmpty())
     QCoreApplication::processEvents();
 }
 #endif
-        std::cout << rel_path << std::endl;
+        if (par != "silent" && par2 != "silent")
+        {
+            std::cout << rel_path << std::endl;
+        }
 
         if (num_threads <= quantity && quantity != 1)
         {
@@ -533,7 +552,11 @@ if (!window_vec.isEmpty())
     QCoreApplication::processEvents();
 }
 #endif
-            std::cout << rel_path << std::endl;
+            if (par != "silent" && par2 != "silent")
+            {
+                std::cout << rel_path << std::endl;
+            }
+
             for (auto& hashfile: hash_files)
             {
 
