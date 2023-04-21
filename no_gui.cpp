@@ -428,7 +428,7 @@ if (!window_vec.isEmpty())
         for (auto& item : currHash)
         {
             if (elem.ends_with(item->getName()))
-            {  
+            {
                 result = item->isEqual(elem);
             }
         }

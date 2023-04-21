@@ -3,10 +3,21 @@
 #include <QApplication>
 #endif
 
+#ifdef WIN32
+#include <Windows.h>
+#endif
+
 #include "no_gui.h"
 
 int main(int argc, char *argv[])
 {
+#ifdef WIN32
+if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+    freopen("CONIN$", "r", stdin);
+}
+#endif
     if (argc > 1)
     {
        if (argc == 5)
