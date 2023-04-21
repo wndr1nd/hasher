@@ -45,7 +45,6 @@ void main_win(MainWindow *window)
 #endif
 
 
-
 void get_path(std::vector<std::string> &paths, std::string curr_path, std::string param = "", std::string param2 = "")
 {
     for (auto& elem : std::filesystem::directory_iterator(curr_path))
@@ -53,6 +52,7 @@ void get_path(std::vector<std::string> &paths, std::string curr_path, std::strin
         if (!std::filesystem::is_directory(elem))
         {
             paths.push_back(elem.path().string());
+
         }
     }
 
@@ -135,7 +135,7 @@ if (!window_vec.isEmpty())
 }
 #endif
 
-    if (param1 != "silent" && param2 != "silent" && gui_vec.empty())
+    if (param1 != "silent" && param2 != "silent")
     {
         std::cout << rel_path << std::endl;
     }

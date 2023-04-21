@@ -11,13 +11,6 @@
 
 int main(int argc, char *argv[])
 {
-#ifdef WIN32
-if (AttachConsole(ATTACH_PARENT_PROCESS)) {
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
-    freopen("CONIN$", "r", stdin);
-}
-#endif
     if (argc > 1)
     {
        if (argc == 5)
@@ -40,6 +33,9 @@ if (AttachConsole(ATTACH_PARENT_PROCESS)) {
 #ifndef nox11
     else
     {
+#ifdef WIN32
+FreeConsole();
+#endif
     QApplication a(argc, argv);
     MainWindow w;
     main_win(&w);
