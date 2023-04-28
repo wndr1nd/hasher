@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     model = new QFileSystemModel(this);
     model->setFilter(QDir::AllEntries);
     model->setRootPath("");
-    ui->list->setModel(model);
+    ui->list->setModel(model); //установка модели файловой сиситемы в виджет list
     ui->list2->setReadOnly(true);
 
 }
@@ -30,10 +30,10 @@ MainWindow::~MainWindow()
 }
 
 
-std::vector<Ihash *> alg_vec;
+std::vector<Ihash *> alg_vec; //алгоритмы выбранные пользователем
 
 
-void MainWindow::check_param(QString check)
+void MainWindow::check_param(QString check) //проверка выбранных параметров
 {
     if (ui->md5->isChecked() && check != "")
     {
@@ -77,25 +77,25 @@ void MainWindow::check_param(QString check)
     }
 }
 
-void MainWindow::set_log(std::string log)
+void MainWindow::set_log(std::string log) //вывод информации
 {
     ui->list2->appendPlainText(QString::fromStdString(log));
     QTextCursor cur = ui->list2->textCursor();
     cur.movePosition(QTextCursor::End);
-    ui->list2->setTextCursor(cur);
+    ui->list2->setTextCursor(cur); //установка курсора в конец для удобства прокрутки
 }
 
 
 void MainWindow::on_list_doubleClicked(const QModelIndex &index)
 {
-    listview = (QListView *)sender();
+    listview = (QListView *)sender(); //указатель на объект от которого поступил сигнал(т.е представление файловой системы)
     QFileInfo fileinfo = model->fileInfo(index);
 
     if (fileinfo.fileName() == "..")
     {
         QDir dir = fileinfo.dir();
         dir.cd("..");
-        listview->setRootIndex(model->index(dir.absolutePath()));
+        listview->setRootIndex(model->index(dir.absolutePath())); //через индекс модели перемещаемся по директориям
     }
     else if (fileinfo.fileName() == ".")
     {
@@ -113,7 +113,7 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->list2->clear();
 
- QDir dir = QDir(model->filePath(listview->currentIndex()));
+ QDir dir = QDir(model->filePath(listview->currentIndex())); //получение пути к текущей директории
  check_param("write");
 
  start_hash(dir.absolutePath().toStdString(), alg_vec, param, param2, threads);
@@ -150,14 +150,15 @@ void MainWindow::on_delete_2_clicked()
 
     QDialog confirmed;
     confirmed.setModal(true);
-    QLabel *line = new QLabel(&confirmed);
+    QLabel *line = new QLabel(&confirmed); //текст
     QDialogButtonBox *btn_box = new QDialogButtonBox(&confirmed);
     btn_box->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
     connect(btn_box, &QDialogButtonBox::accepted, &confirmed, &QDialog::accept);
     connect(btn_box, &QDialogButtonBox::rejected, &confirmed, &QDialog::reject);
+    //создание и соединение с сигналами. connect(объект, сигнал, объект2, сигнал2)
 
-    QFormLayout *layout = new QFormLayout();
+    QFormLayout *layout = new QFormLayout(); //для более корректного отображения
     layout->addRow(tr("Confirm?"), line);   //tr translate
     layout->addWidget(btn_box);
 
@@ -169,5 +170,8 @@ void MainWindow::on_delete_2_clicked()
         delete_hash(dir.absolutePath().toStdString());
         ui->list2->setPlainText("clear");
     }
+    //что интересно, при выходе из функции QDialog confirmed уничтожится, а за ним и QLabel *line
+    //и QDialogButtonBox *btn_box так они находятся в layout а он тем временем установлен в confirmed
+    //в итоге вроде бы утечек быть не должно)
 }
 

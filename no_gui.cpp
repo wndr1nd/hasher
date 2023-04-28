@@ -25,12 +25,12 @@ std::string separ = "/";
 #ifndef nox11
 #include "mainwindow.h"
 #include <QCoreApplication>
-QVector<MainWindow *> window_vec;
+QVector<MainWindow *> window_vec; //вектор для окна
 #endif
 
-std::vector<std::string> file_path;
-std::vector<std::thread> threads;
-std::vector<Ihash*> vec;
+std::vector<std::string> file_path; //вектор для путей к файлам
+std::vector<std::thread> threads; //вектор для потоков
+std::vector<Ihash*> vec; //алгоритмы
 
 void check_hash(std::string par, std::string par2, std::string curPath, int quantity);
 void check_file(std::string par, std::string par2, std::string curPath);
@@ -45,6 +45,7 @@ void main_win(MainWindow *window)
 #endif
 
 
+//получение всех путей
 void get_path(std::vector<std::string> &paths, std::string curr_path, std::string param = "", std::string param2 = "")
 {
     for (auto& elem : std::filesystem::directory_iterator(curr_path))
@@ -82,7 +83,7 @@ void start_hash(std::string dir1, std::vector<Ihash*> &gui_vec, std::string para
 {
     int quantity;
     std::string base_path = dir1;
-    std::string rel_path;
+    std::string rel_path; //относительный путь к файлу
     if (quantity_threads == 0)
     {
         quantity = std::thread::hardware_concurrency();
@@ -131,7 +132,7 @@ void start_hash(std::string dir1, std::vector<Ihash*> &gui_vec, std::string para
 if (!window_vec.isEmpty())
 {
     window_vec[0]->set_log(rel_path);
-    QCoreApplication::processEvents();
+    QCoreApplication::processEvents(); //обработка событий, нужна для отображения информации
 }
 #endif
 
@@ -142,7 +143,7 @@ if (!window_vec.isEmpty())
 
     if (num_threads <= quantity && quantity != 1)
     {
-        std::thread th([&](){
+        std::thread th([&](){ //без временных переменных иногда записывается каша
             std::string tmp_3 = dir1 + separ;
             std::string tmp_1 = file;
             std::string tmp_2 = std::filesystem::relative(file, base_path).string();
@@ -214,6 +215,7 @@ void delete_hash(std::string path)
 
 }
 
+//обработка параметров и вызов функций
 void cmd_handler(std::string param, std::string param2, std::string command, std::string path)
 {
     if (command == "clear")
@@ -313,6 +315,7 @@ void fill_vec(std::vector<Ihash*>& vector)
 }
 
 
+//заполнение вектора out путями к файлам hash.<алгоритм>, если передан currHash то он заполняется классами алгоритмов
 void prepare_check(std::vector<std::string>& out, std::vector<std::string>& paths, std::set<Ihash*>* currHash = nullptr)
 {
     for (auto& elem : paths)
@@ -343,6 +346,7 @@ void clear_thread()
     }
     threads.clear();
 }
+
 
 void check_hash(std::string par, std::string par2, std::string curPath, int quantity_threads = 1)
 {
@@ -470,6 +474,7 @@ if (!window_vec.isEmpty())
 }
 
 
+//открывает файлы hash.<алгоритм> и заполняет вектор files_vector именно названиями файлов
 void check_available(std::string path_to_file, std::vector<std::string> &files_vector)
 {
     std::ifstream ss;

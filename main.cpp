@@ -34,13 +34,13 @@ int main(int argc, char *argv[])
     else
     {
 #ifdef WIN32
-FreeConsole();
+FreeConsole(); //для удобства
 #endif
     QApplication a(argc, argv);
-    MainWindow w;
-    main_win(&w);
+    MainWindow w; //создание окна
+    main_win(&w); //передача окна в часть без графики
     w.show();
-    return a.exec();
+    return a.exec(); //основной цикл окна
     }
 #endif
 }
